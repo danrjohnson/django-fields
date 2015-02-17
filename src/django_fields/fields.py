@@ -247,6 +247,8 @@ class BaseEncryptedNumberField(BaseEncryptedField):
 
     def to_python(self, value):
         # value is either an int or a string of an integer
+        if value is None:
+            return value
         if isinstance(value, self.number_type) or value == '':
             number = value
         else:
@@ -256,6 +258,8 @@ class BaseEncryptedNumberField(BaseEncryptedField):
 
     # def get_prep_value(self, value):
     def get_db_prep_value(self, value, connection=None, prepared=False):
+        if value is None or value == '':
+            return value
         number_text = self.format_string % value
         return super(BaseEncryptedNumberField, self).get_db_prep_value(
             number_text,
